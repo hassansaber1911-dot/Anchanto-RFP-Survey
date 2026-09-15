@@ -1,3 +1,4 @@
+function trackEvent(name,params={}){if(typeof window.gtag==="function")window.gtag("event",name,params);}
 
 const KEY="anchanto_rfp_survey_v1";
 const STAGES=[
@@ -66,7 +67,7 @@ function newForm(){
  document.querySelector("#newForm").onsubmit=e=>{
   e.preventDefault(); const f=Object.fromEntries(new FormData(e.currentTarget));
   const d={id:crypto.randomUUID(),...f,status:"Draft",stage:0,answers:{},createdAt:now(),updatedAt:now()};
-  state.discoveries.unshift(d);persist();view={page:"wizard",id:d.id,stage:0};render();toast("Discovery created");
+  state.discoveries.unshift(d);persist();trackEvent("discovery_started",{solution:"WMS + OXM",customer_type:"3PL"});view={page:"wizard",id:d.id,stage:0};render();toast("Discovery created");
  }
 }
 function field(label,name,type="text",req=false){return `<div class="field"><label>${label}</label><input name="${name}" type="${type}" ${req?"required":""}></div>`}
@@ -196,7 +197,7 @@ function renderWizard(){
  app.innerHTML=shell(body,`<button class="top-action" onclick="saveExit()">Dashboard</button>`);
 }
 function jump(i){view.stage=i;renderWizard()}
-function next(){const d=current();d.stage=Math.max(d.stage,view.stage+1);saveD(d,"Section saved");view.stage++;renderWizard()}
+function next(){const d=current();trackEvent("stage_completed",{stage_number:view.stage+1});d.stage=Math.max(d.stage,view.stage+1);saveD(d,"Section saved");view.stage++;renderWizard()}
 function prev(){view.stage--;renderWizard()}
 function saveExit(){saveD(current(),"Progress saved");goDashboard()}
 function openDiscovery(id){const d=state.discoveries.find(x=>x.id===id);view={page:"wizard",id,stage:d.status==="Completed"?STAGES.length-1:Math.min(d.stage||0,STAGES.length-1)};render()}
@@ -235,12 +236,14 @@ function review(d){
  <div class="card"><div class="row" style="justify-content:flex-end"><button class="btn secondary" onclick="exportExcel('${d.id}')">Download Excel</button><button class="btn primary" onclick="completeDiscovery()">Complete Discovery ✓</button></div></div>`;
 }
 function completeDiscovery(){
+  trackEvent("discovery_completed",{solution:"WMS + OXM",customer_type:"3PL"});
  const d=current();
  d.status="Completed";d.stage=STAGES.length-1;saveD(d,"Discovery completed");
  view={page:"complete",id:d.id,stage:STAGES.length-1};
  render();
 }
 function exportExcel(id){
+  trackEvent("excel_downloaded",{solution:"WMS + OXM",customer_type:"3PL"});
  const d=state.discoveries.find(x=>x.id===id); if(!d)return;
  const rows=[["Section","Question","Answer"],
  ["Customer Information","Contact Name",d.contact],["Customer Information","Company Name",d.company],["Customer Information","Email",d.email],["Customer Information","Mobile Number",d.mobile||""],["Customer Information","Customer Type",d.customerType],["Customer Information","Required Solution",d.solution]];
