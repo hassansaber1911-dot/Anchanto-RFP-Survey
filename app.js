@@ -1,6 +1,6 @@
 function trackEvent(name,params={}){if(typeof window.gtag==="function")window.gtag("event",name,params);}
 
-const KEY="anchanto_rfp_survey_v1";
+const KEY="wms_rfp_survey_v1";
 const STAGES=[
   {id:"warehouse",title:"Warehouse Setup"},
   {id:"customers",title:"Customers"},
@@ -26,7 +26,7 @@ function pct(d){return Math.round(((d.stage||0)/(STAGES.length-1))*100)}
 function saveD(d,msg="Auto-saved"){d.updatedAt=now();persist(); if(msg) toast(msg)}
 function val(d,k){return d.answers?.[k]??""}
 function hasB2C(d){return ["B2C","Both"].includes(val(d,"customer_type"))||["B2C","Both"].includes(val(d,"outbound_type"))||val(d,"orders_received")==="Sales Channel"}
-function brand(){return `<div class="brand"><div class="brand-mark"></div><div><div class="brand-sub">Anchanto</div><div class="brand-title">RFP Survey</div></div></div>`}
+function brand(){return `<div class="brand"><div class="brand-mark">W</div><div><div class="brand-sub">Warehouse Discovery</div><div class="brand-title">WMS RFP Survey</div></div></div>`}
 function shell(content,action=""){return `<div class="shell"><header class="topbar">${brand()}${action}</header><main class="container">${content}</main></div>`}
 
 function dashboard(){
@@ -43,10 +43,10 @@ function dashboard(){
     </div>
   </div>`).join("");
  const body=state.discoveries.length?`
-  <section class="hero"><h1>Anchanto RFP Survey</h1><p>Run a structured customer discovery, capture the right operational requirements, and keep every opportunity ready for review.</p></section>
+  <section class="hero"><h1>WMS RFP Survey</h1><p>Run a structured customer discovery, capture the right operational requirements, and keep every opportunity ready for review.</p></section>
   <div class="section-head"><div><h2>Discoveries</h2><div class="muted">Continue drafts or review completed surveys.</div></div></div>
   <div class="grid">${cards}</div>`:
-  `<section class="hero"><h1>Anchanto RFP Survey</h1><p>Build a complete customer discovery without missing critical questions.</p></section>
+  `<section class="hero"><h1>WMS RFP Survey</h1><p>Build a complete customer discovery without missing critical questions.</p></section>
    <div class="card empty"><h2>Start your first discovery</h2><p class="muted">Create a customer profile and move through a guided WMS + OXM discovery.</p><button class="btn primary" onclick="newDiscovery()">+ New Discovery</button></div>`;
  app.innerHTML=shell(body,`<button class="top-action" onclick="newDiscovery()">+ New Discovery</button>`);
 }
@@ -261,7 +261,7 @@ function completionPage(){
      <div class="pill">Discovery Completed</div>
      <h1>Congratulations!</h1>
      <p>Your customer discovery survey has been completed successfully.</p>
-     <p class="muted">Please download the Excel file and send it to the Anchanto team for review.</p>
+     <p class="muted">Download the Excel file to review, share, or use it as an input for solution design.</p>
      <div class="completion-company">${esc(d.company)} · ${esc(d.customerType)} · ${esc(d.solution)}</div>
      <div class="row completion-actions">
        <button class="btn primary" onclick="exportExcel('${d.id}')">Download Excel</button>
