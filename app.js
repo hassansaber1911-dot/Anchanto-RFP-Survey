@@ -47,7 +47,7 @@ function dashboard(){
   <div class="section-head"><div><h2>Discoveries</h2><div class="muted">Continue drafts or review completed surveys.</div></div></div>
   <div class="grid">${cards}</div>`:
   `<section class="hero"><h1>WMS RFP Survey</h1><p>Build a complete customer discovery without missing critical questions.</p></section>
-   <div class="card empty"><h2>Start your first discovery</h2><p class="muted">Create a customer profile and move through a guided WMS + OXM discovery.</p><button class="btn primary" onclick="newDiscovery()">+ New Discovery</button></div>`;
+   <div class="card empty"><h2>Start your first discovery</h2><p class="muted">Create a customer profile and move through a guided WMS + order management discovery.</p><button class="btn primary" onclick="newDiscovery()">+ New Discovery</button></div>`;
  app.innerHTML=shell(body,`<button class="top-action" onclick="newDiscovery()">+ New Discovery</button>`);
 }
 
@@ -60,14 +60,14 @@ function newForm(){
   ${field("Email","email","email",true)}
   ${field("Mobile Number","mobile","tel",false)}
   <div class="field"><label>Customer Type</label><select name="customerType"><option>3PL</option></select></div>
-  <div class="field"><label>Required Solution</label><select name="solution"><option>WMS + OXM</option></select></div>
+  <div class="field"><label>Required Solution</label><select name="solution"><option>WMS + order management</option></select></div>
   <div class="field full row" style="justify-content:flex-end"><button type="button" class="btn secondary" onclick="goDashboard()">Cancel</button><button class="btn primary">Start Discovery →</button></div>
  </form></div>`;
  app.innerHTML=shell(body);
  document.querySelector("#newForm").onsubmit=e=>{
   e.preventDefault(); const f=Object.fromEntries(new FormData(e.currentTarget));
   const d={id:crypto.randomUUID(),...f,status:"Draft",stage:0,answers:{},createdAt:now(),updatedAt:now()};
-  state.discoveries.unshift(d);persist();trackEvent("discovery_started",{solution:"WMS + OXM",customer_type:"3PL"});view={page:"wizard",id:d.id,stage:0};render();toast("Discovery created");
+  state.discoveries.unshift(d);persist();trackEvent("discovery_started",{solution:"WMS + order management",customer_type:"3PL"});view={page:"wizard",id:d.id,stage:0};render();toast("Discovery created");
  }
 }
 function field(label,name,type="text",req=false){return `<div class="field"><label>${label}</label><input name="${name}" type="${type}" ${req?"required":""}></div>`}
@@ -169,7 +169,7 @@ function questions(d,stage){
   return s.join("");
  }
  case 7:return [
-  qInput(d,"why_wms","Why are you looking for a WMS / OXM now?","textarea"),
+  qInput(d,"why_wms","Why are you looking for a warehouse / order management now?","textarea"),
   qInput(d,"challenges","What are the main challenges with your current operation?","textarea"),
   qInput(d,"top_improvements","What are the top 3 things you want the new solution to improve?","textarea"),
   qInput(d,"target_date","Do you have a target go-live date?","choice",["Yes","No"]),
@@ -211,7 +211,7 @@ const LABELS={
  inbound_notification:"Inbound notification",inbound_system:"Current inbound system",asn_po:"ASN / PO before arrival",asn_method:"ASN / PO received via",receiving_steps:"Inbound receiving steps",storage_decision:"Storage decision",dedicated_storage:"Dedicated customer storage",inbound_volume:"Inbound volume",pre_inbound_info:"Pre-inbound information",
  orders_day:"Outbound orders / day",outbound_type:"Outbound type",picking_method:"Picking method",pick_priority:"Picking priority",packaging:"Packaging materials",track_packaging:"Track packaging inventory",orders_received:"Orders received via",after_packing:"After packing",
  erp:"ERP used",erp_name:"ERP",erp_data:"ERP data exchange",sales_channels:"Sales channels",carriers:"Carriers",carrier_integration:"Carrier integration",carrier_scope:"Carrier integration scope",own_fleet:"Own fleet management",
- why_wms:"Why WMS / OXM now?",challenges:"Current challenges",top_improvements:"Top improvements",target_date:"Target go-live date required?",go_live_date:"Target go-live date"
+ why_wms:"Why warehouse / order management now?",challenges:"Current challenges",top_improvements:"Top improvements",target_date:"Target go-live date required?",go_live_date:"Target go-live date"
 };
 const STAGE_KEYS={
  "Warehouse Setup":["warehouses","locations_labeled","wifi","printers"],
@@ -236,14 +236,14 @@ function review(d){
  <div class="card"><div class="row" style="justify-content:flex-end"><button class="btn secondary" onclick="exportExcel('${d.id}')">Download Excel</button><button class="btn primary" onclick="completeDiscovery()">Complete Discovery ✓</button></div></div>`;
 }
 function completeDiscovery(){
-  trackEvent("discovery_completed",{solution:"WMS + OXM",customer_type:"3PL"});
+  trackEvent("discovery_completed",{solution:"WMS + order management",customer_type:"3PL"});
  const d=current();
  d.status="Completed";d.stage=STAGES.length-1;saveD(d,"Discovery completed");
  view={page:"complete",id:d.id,stage:STAGES.length-1};
  render();
 }
 function exportExcel(id){
-  trackEvent("excel_downloaded",{solution:"WMS + OXM",customer_type:"3PL"});
+  trackEvent("excel_downloaded",{solution:"WMS + order management",customer_type:"3PL"});
  const d=state.discoveries.find(x=>x.id===id); if(!d)return;
  const rows=[["Section","Question","Answer"],
  ["Customer Information","Contact Name",d.contact],["Customer Information","Company Name",d.company],["Customer Information","Email",d.email],["Customer Information","Mobile Number",d.mobile||""],["Customer Information","Customer Type",d.customerType],["Customer Information","Required Solution",d.solution]];
