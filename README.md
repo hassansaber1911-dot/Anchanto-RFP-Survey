@@ -1,9 +1,9 @@
-# Anchanto RFP Survey
+# WMS RFP Survey
 
 **A guided 3PL discovery prototype for turning warehouse and fulfillment conversations into structured, reviewable requirements.**
 
 ## Product Overview
-Operational discovery can easily become fragmented across calls, notes, and spreadsheets. Anchanto RFP Survey explores a guided workflow that captures the information needed to understand a 3PL customer's WMS + OXM requirements before solution design.
+Operational discovery can easily become fragmented across calls, notes, and spreadsheets. WMS RFP Survey explores a guided workflow that captures the information needed to understand a 3PL customer's WMS + OXM requirements before solution design.
 
 ## The Problem
 When discovery is inconsistent, important requirements can surface too late: warehouse setup, SKU characteristics, batch/expiry needs, inbound and outbound flows, integrations, workforce, volumes, and business goals. The prototype creates one repeatable path through those topics.
