@@ -14,6 +14,8 @@ const STAGES=[
 ];
 
 let state=load();
+// Normalize the solution label on saved discoveries without changing answers.
+state.discoveries.forEach(d=>{d.solution='WMS + order management'});
 let view={page:"dashboard",id:null,stage:0};
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{discoveries:[]}}catch{return{discoveries:[]}}}
